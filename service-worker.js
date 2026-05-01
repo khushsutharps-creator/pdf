@@ -1,4 +1,4 @@
-const CACHE = "khush-pdf-v2"; // version change karo
+const CACHE = "khush-pdf-v3";
 
 self.addEventListener("install", e => {
   self.skipWaiting();
@@ -18,5 +18,5 @@ self.addEventListener("activate", e => {
 });
 
 self.addEventListener("fetch", e => {
-  // NO aggressive cache (live version dikhe)
+  return;
 });
