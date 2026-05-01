@@ -1,15 +1,22 @@
-const CACHE="pdf-app-v2";
+const CACHE = "khush-pdf-v2"; // version change karo
 
-self.addEventListener("install",e=>{
-  e.waitUntil(
-    caches.open(CACHE).then(cache=>{
-      return cache.addAll(["./","./index.html"]);
-    })
-  );
+self.addEventListener("install", e => {
+  self.skipWaiting();
 });
 
-self.addEventListener("fetch",e=>{
-  e.respondWith(
-    caches.match(e.request).then(res=>res||fetch(e.request))
+self.addEventListener("activate", e => {
+  e.waitUntil(
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.map(key => {
+          if (key !== CACHE) return caches.delete(key);
+        })
+      );
+    })
   );
+  self.clients.claim();
+});
+
+self.addEventListener("fetch", e => {
+  // NO aggressive cache (live version dikhe)
 });
