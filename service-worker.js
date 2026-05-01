@@ -1,4 +1,4 @@
-const CACHE="pdf-app-v1";
+const CACHE="pdf-app-v2";
 
 self.addEventListener("install",e=>{
   e.waitUntil(
