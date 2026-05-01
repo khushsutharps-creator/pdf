@@ -8,8 +8,16 @@
 
 <link rel="manifest" href="manifest.json">
 
+<!-- 🔥 FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
 
 body{
   display:flex;
@@ -21,7 +29,7 @@ body{
   overflow:hidden;
 }
 
-/* 🔥 SIMPLE SMOOTH BACKGROUND */
+/* 🌈 SMOOTH BACKGROUND */
 body::before{
   content:"";
   position:absolute;
@@ -33,7 +41,6 @@ body::before{
   z-index:-1;
 }
 
-/* Background starts AFTER intro */
 body.loaded::before{
   opacity:1;
 }
@@ -55,7 +62,7 @@ body.loaded::before{
   z-index:1;
 }
 
-/* INTRO FIX */
+/* 🔥 INTRO */
 #intro{
   position:fixed;
   inset:0;
@@ -63,11 +70,22 @@ body.loaded::before{
   display:flex;
   justify-content:center;
   align-items:center;
-  font-size:26px;
+
+  font-size:30px;
+  font-weight:800;
+  letter-spacing:5px;
   color:#6366f1;
+
   z-index:9999;
 
-  animation:intro 3s ease forwards;
+  text-shadow:
+    0 0 5px #6366f1,
+    0 0 10px #6366f1,
+    0 0 20px #6366f1,
+    0 0 40px #6366f1,
+    0 0 80px #6366f1;
+
+  animation:intro 3s ease forwards, glowPulse 1.2s infinite alternate;
 }
 
 @keyframes intro{
@@ -75,6 +93,22 @@ body.loaded::before{
   20%{opacity:1;}
   80%{opacity:1;}
   100%{opacity:0;visibility:hidden;}
+}
+
+@keyframes glowPulse{
+  from{
+    text-shadow:
+      0 0 5px #6366f1,
+      0 0 10px #6366f1,
+      0 0 20px #6366f1;
+  }
+  to{
+    text-shadow:
+      0 0 10px #6366f1,
+      0 0 25px #6366f1,
+      0 0 50px #6366f1,
+      0 0 100px #6366f1;
+  }
 }
 
 /* UI */
@@ -92,6 +126,7 @@ button,select{
   margin-top:10px;
   border:none;
   border-radius:8px;
+  font-size:16px;
 }
 
 button{
@@ -146,7 +181,7 @@ drop.ondrop=e=>{
 
 drop.ondragover=e=>e.preventDefault();
 
-/* 🔥 FIX: intro ke baad background start */
+/* 🔥 background delay after intro */
 setTimeout(()=>{
   document.body.classList.add("loaded");
 },3000);
