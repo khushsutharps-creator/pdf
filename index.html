@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 
-<!-- MOBILE FIX -->
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <title>Khush PDF App</title>
@@ -23,7 +22,7 @@ body{
   overflow:hidden;
 }
 
-/* 🔥 ANIMATED BACKGROUND */
+/* BACKGROUND (DELAYED) */
 body::before{
   content:"";
   position:absolute;
@@ -31,26 +30,29 @@ body::before{
   height:200%;
   background:linear-gradient(45deg,#6366f1,#22c55e,#0ea5e9,#9333ea);
   animation:bgMove 8s linear infinite;
+  animation-delay:3s;
+  opacity:0;
+  animation-fill-mode:forwards;
   z-index:-1;
 }
 
 @keyframes bgMove{
-  0%{transform:translate(0,0);}
+  0%{transform:translate(0,0); opacity:1;}
   50%{transform:translate(-25%,-25%);}
   100%{transform:translate(0,0);}
 }
 
-/* 🔥 CARD */
+/* CARD */
 .container{
   width:90%;
   max-width:400px;
-  background:rgba(30,41,59,0.7);
+  background:rgba(30,41,59,0.75);
   backdrop-filter:blur(20px);
   padding:25px;
   border-radius:20px;
   text-align:center;
   box-shadow:0 10px 40px rgba(0,0,0,0.6);
-  animation:fadeIn 0.8s ease;
+  animation:fadeIn 1s ease;
 }
 
 @keyframes fadeIn{
@@ -63,7 +65,6 @@ h1{
   margin-bottom:10px;
 }
 
-/* DESCRIPTION */
 .desc{
   font-size:13px;
   opacity:0.85;
@@ -85,7 +86,7 @@ h1{
   background:rgba(99,102,241,0.1);
 }
 
-/* INPUTS */
+/* INPUT */
 select,button,input{
   width:100%;
   padding:12px;
@@ -95,7 +96,6 @@ select,button,input{
   font-size:16px;
 }
 
-/* BUTTON */
 button{
   background:#6366f1;
   color:white;
@@ -107,14 +107,13 @@ button:hover{
   background:#4f46e5;
 }
 
-/* DOWNLOAD */
 a{
   display:block;
   margin-top:15px;
   color:#22c55e;
 }
 
-/* 🔥 INTRO ANIMATION */
+/* INTRO */
 #intro{
   position:fixed;
   inset:0;
@@ -132,13 +131,19 @@ a{
     0 0 40px #6366f1,
     0 0 80px #6366f1;
 
-  animation:introAnim 2.5s ease forwards;
+  animation:introShow 3s ease forwards, glowPulse 1.5s infinite alternate;
 }
 
-@keyframes introAnim{
-  0%{opacity:1;}
-  70%{opacity:1;}
-  100%{opacity:0;visibility:hidden;}
+@keyframes introShow{
+  0%{opacity:0;}
+  20%{opacity:1;}
+  80%{opacity:1;}
+  100%{opacity:0; visibility:hidden;}
+}
+
+@keyframes glowPulse{
+  from{text-shadow:0 0 10px #6366f1;}
+  to{text-shadow:0 0 40px #6366f1;}
 }
 </style>
 </head>
@@ -155,7 +160,7 @@ a{
     Aap ek sheet par 2 ya 4 pages set karke printing cost kam kar sakte ho.
   </div>
 
-  <div class="drop" id="drop">Tap ya Drag PDF
+  <div class="drop" id="drop">Upload PDF (Tap or Drag)
     <input type="file" id="file" accept="application/pdf" hidden>
   </div>
 
@@ -184,10 +189,7 @@ input.onchange=e=>{
   drop.innerText=file.name;
 };
 
-drop.ondragover=e=>{
-  e.preventDefault();
-  drop.style.borderColor="#6366f1";
-};
+drop.ondragover=e=>e.preventDefault();
 
 drop.ondrop=e=>{
   e.preventDefault();
@@ -214,19 +216,9 @@ async function convert(){
         const embed=await newPdf.embedPage(pages[i+j]);
 
         if(mode===2){
-          page.drawPage(embed,{
-            x:j*(width/2),
-            y:0,
-            width:width/2,
-            height:height
-          });
+          page.drawPage(embed,{x:j*(width/2),y:0,width:width/2,height});
         }else{
-          page.drawPage(embed,{
-            x:(j%2)*(width/2),
-            y:j<2?height/2:0,
-            width:width/2,
-            height:height/2
-          });
+          page.drawPage(embed,{x:(j%2)*(width/2),y:j<2?height/2:0,width:width/2,height:height/2});
         }
       }
     }
