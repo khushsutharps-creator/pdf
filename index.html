@@ -15,27 +15,49 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
 
 body{
-  background:#0f172a;
-  color:white;
   display:flex;
   justify-content:center;
   align-items:center;
   min-height:100vh;
-  overflow-x:hidden;
+  color:white;
+  overflow:hidden;
 }
 
-/* APP CARD */
+/* 🔥 ANIMATED BACKGROUND */
+body::before{
+  content:"";
+  position:absolute;
+  width:200%;
+  height:200%;
+  background:linear-gradient(45deg,#6366f1,#22c55e,#0ea5e9,#9333ea);
+  animation:bgMove 8s linear infinite;
+  z-index:-1;
+}
+
+@keyframes bgMove{
+  0%{transform:translate(0,0);}
+  50%{transform:translate(-25%,-25%);}
+  100%{transform:translate(0,0);}
+}
+
+/* 🔥 CARD */
 .container{
   width:90%;
   max-width:400px;
-  background:#1e293b;
+  background:rgba(30,41,59,0.7);
+  backdrop-filter:blur(20px);
   padding:25px;
   border-radius:20px;
   text-align:center;
-  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+  box-shadow:0 10px 40px rgba(0,0,0,0.6);
+  animation:fadeIn 0.8s ease;
 }
 
-/* TITLE */
+@keyframes fadeIn{
+  from{opacity:0;transform:scale(0.9);}
+  to{opacity:1;transform:scale(1);}
+}
+
 h1{
   font-size:22px;
   margin-bottom:10px;
@@ -44,24 +66,26 @@ h1{
 /* DESCRIPTION */
 .desc{
   font-size:13px;
-  opacity:0.8;
+  opacity:0.85;
   margin-bottom:15px;
 }
 
 /* DROP AREA */
 .drop{
-  border:2px dashed #555;
+  border:2px dashed #aaa;
   padding:20px;
   border-radius:15px;
   margin-bottom:15px;
   cursor:pointer;
+  transition:0.3s;
 }
 
-.drop.active{
+.drop:hover{
   border-color:#6366f1;
+  background:rgba(99,102,241,0.1);
 }
 
-/* SELECT + BUTTON */
+/* INPUTS */
 select,button,input{
   width:100%;
   padding:12px;
@@ -71,13 +95,16 @@ select,button,input{
   font-size:16px;
 }
 
+/* BUTTON */
 button{
   background:#6366f1;
   color:white;
+  transition:0.3s;
 }
 
-button:active{
-  transform:scale(0.97);
+button:hover{
+  transform:scale(1.05);
+  background:#4f46e5;
 }
 
 /* DOWNLOAD */
@@ -87,7 +114,7 @@ a{
   color:#22c55e;
 }
 
-/* INTRO */
+/* 🔥 INTRO ANIMATION */
 #intro{
   position:fixed;
   inset:0;
@@ -95,14 +122,23 @@ a{
   display:flex;
   justify-content:center;
   align-items:center;
-  font-size:24px;
-  letter-spacing:3px;
+  font-size:26px;
+  letter-spacing:4px;
   color:#6366f1;
-  animation:fade 2s ease 2s forwards;
+
+  text-shadow:
+    0 0 10px #6366f1,
+    0 0 20px #6366f1,
+    0 0 40px #6366f1,
+    0 0 80px #6366f1;
+
+  animation:introAnim 2.5s ease forwards;
 }
 
-@keyframes fade{
-  to{opacity:0;visibility:hidden;}
+@keyframes introAnim{
+  0%{opacity:1;}
+  70%{opacity:1;}
+  100%{opacity:0;visibility:hidden;}
 }
 </style>
 </head>
@@ -150,7 +186,7 @@ input.onchange=e=>{
 
 drop.ondragover=e=>{
   e.preventDefault();
-  drop.classList.add("active");
+  drop.style.borderColor="#6366f1";
 };
 
 drop.ondrop=e=>{
@@ -160,7 +196,7 @@ drop.ondrop=e=>{
 };
 
 async function convert(){
-  if(!file){alert("PDF upload karo");return;}
+  if(!file){alert("Upload PDF first");return;}
 
   const buffer=await file.arrayBuffer();
   const pdf=await PDFLib.PDFDocument.load(buffer);
@@ -206,7 +242,7 @@ async function convert(){
   link.style.display="block";
 }
 
-/* SERVICE WORKER */
+/* PWA */
 if("serviceWorker" in navigator){
   navigator.serviceWorker.register("service-worker.js");
 }
